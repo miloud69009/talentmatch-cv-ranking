@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.ComboBox;
 
 
 /**
@@ -23,8 +24,29 @@ import javafx.stage.Stage;
 public class JfxView {
     private HBox searchSkillsBox;
     private VBox resultBox;
+    private ComboBox<Strategy> strategyBox;
+    private static enum Strategy {
+        ALL_50("tout \u2265 50%", 50),
+        ALL_60("tout \u2265 60%", 60);
+        private final String label;
+        private final int threshold;
 
-    /**
+        Strategy(String label, int threshold) {
+            this.label = label;
+            this.threshold = threshold;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+
+        public int threshold() {
+            return threshold;
+        }
+    }
+
+        /**
      * Create the main view of the application.
      */
     public JfxView(final Stage stage, final int width, final int height) {
@@ -38,6 +60,8 @@ public class JfxView {
 
         Node searchSkillsBox = createCurrentSearchSkillsWidget();
         root.getChildren().add(searchSkillsBox);
+        Node strategy =  createStrategyWidget();
+        root.getChildren().add(strategy);
 
 
         Node search = createSearchWidget();
@@ -108,6 +132,10 @@ public class JfxView {
             public void handle(final ActionEvent event) {
                 // TODO: This code is unacceptably dirty!
                 // TODO: You MUST rewrite it for the final version.
+                Strategy chosen = (strategyBox != null && strategyBox.getValue() !=null)
+                        ? strategyBox.getValue()
+                        : Strategy.ALL_50;
+                int threshold = chosen.threshold();
                 ApplicantList listApplicants
                     = new ApplicantListBuilder(new File(".")).build();
                 resultBox.getChildren().clear();
@@ -116,7 +144,7 @@ public class JfxView {
                     // TODO: OMG, don't ever do that ...
                     for (Node skill : searchSkillsBox.getChildren()) {
                         String skillName = ((Button) skill).getText();
-                        if (a.getSkill(skillName) < 50) {
+                        if (a.getSkill(skillName) < threshold) {
                             selected = false;
                             break;
                         }
@@ -128,6 +156,17 @@ public class JfxView {
             }
         });
         return search;
+    }
+
+    private Node createStrategyWidget(){
+        HBox box = new HBox();
+        Label label = new Label("Strategy:");
+        strategyBox = new ComboBox<>();
+        strategyBox.getItems().addAll(Strategy.ALL_50,Strategy.ALL_60);
+        strategyBox.getSelectionModel().select(Strategy.ALL_50);
+        box.getChildren().addAll(label, strategyBox);
+        box.setSpacing(10);
+        return box;
     }
 
     /**
