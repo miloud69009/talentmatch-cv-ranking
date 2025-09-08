@@ -25,9 +25,11 @@ public class JfxView {
     private HBox searchSkillsBox;
     private VBox resultBox;
     private ComboBox<Strategy> strategyBox;
+
     private static enum Strategy {
         ALL_50("tout \u2265 50%", 50),
-        ALL_60("tout \u2265 60%", 60);
+        ALL_60("tout \u2265 60%", 60),
+        AVG_50("moyenne \u2265 50%", 50);
         private final String label;
         private final int threshold;
         
@@ -46,7 +48,7 @@ public class JfxView {
         }
     }
 
-        /**
+    /**
      * Create the main view of the application.
      */
     public JfxView(final Stage stage, final int width, final int height) {
@@ -60,7 +62,7 @@ public class JfxView {
 
         Node searchSkillsBox = createCurrentSearchSkillsWidget();
         root.getChildren().add(searchSkillsBox);
-        Node strategy =  createStrategyWidget();
+        Node strategy = createStrategyWidget();
         root.getChildren().add(strategy);
 
 
@@ -130,39 +132,70 @@ public class JfxView {
         search.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent event) {
-                // TODO: This code is unacceptably dirty!
-                // TODO: You MUST rewrite it for the final version.
-                Strategy chosen = (strategyBox != null && strategyBox.getValue() !=null)
+                // lire la stratégie choisie (défaut: ALL_50)
+                Strategy chosen = (strategyBox != null && strategyBox.getValue() != null)
                         ? strategyBox.getValue()
                         : Strategy.ALL_50;
                 int threshold = chosen.threshold();
-                ApplicantList listApplicants
-                    = new ApplicantListBuilder(new File(".")).build();
+
+                // charger les candidats
+                ApplicantList listApplicants = new ApplicantListBuilder(new File(".")).build();
+
+                // clear résultats
                 resultBox.getChildren().clear();
+
                 for (Applicant a : listApplicants) {
-                    boolean selected = true;
-                    // TODO: OMG, don't ever do that ...
-                    for (Node skill : searchSkillsBox.getChildren()) {
-                        String skillName = ((Button) skill).getText();
-                        if (a.getSkill(skillName) < threshold) {
-                            selected = false;
-                            break;
+                    boolean selected;
+
+                    if (chosen == Strategy.AVG_50) {
+                        // --- Cas "moyenne ≥ 50%"
+                        int count = searchSkillsBox.getChildren().size();
+                        if (count == 0) {
+                            selected = true; // aucun critère -> on accepte
+                        } else {
+                            int sum = 0;
+                            for (Node skill : searchSkillsBox.getChildren()) {
+                                String skillName = ((Button) skill).getText();
+                                sum += a.getSkill(skillName);
+                            }
+                            double avg = sum / (double) count; // division réelle
+                            selected = (avg >= 50.0);
+                        }
+                    } else {
+                        // --- Cas "tout ≥ seuil" (50% ou 60%)
+                        selected = true;
+                        for (Node skill : searchSkillsBox.getChildren()) {
+                            String skillName = ((Button) skill).getText();
+                            if (a.getSkill(skillName) < threshold) {
+                                selected = false;
+                                break;
+                            }
                         }
                     }
+
                     if (selected) {
-                        resultBox.getChildren().add(new Label(a.getName()));
+                        double avg = averageForSkills(a);
+                        String line;
+                        if (searchSkillsBox.getChildren().isEmpty()) {
+                            line = a.getName() + " — N/A"; // pas de compétences demandées
+                        } else {
+                            line = a.getName() + " — " + String.format("%.1f%%", avg);
+                        }
+                        resultBox.getChildren().add(new Label(line));
                     }
+
                 }
             }
         });
         return search;
     }
 
-    private Node createStrategyWidget(){
+
+    private Node createStrategyWidget() {
         HBox box = new HBox();
         Label label = new Label("Strategy:");
         strategyBox = new ComboBox<>();
-        strategyBox.getItems().addAll(Strategy.ALL_50,Strategy.ALL_60);
+        strategyBox.getItems().addAll(Strategy.ALL_50, Strategy.ALL_60, Strategy.AVG_50);
         strategyBox.getSelectionModel().select(Strategy.ALL_50);
         box.getChildren().addAll(label, strategyBox);
         box.setSpacing(10);
@@ -176,5 +209,18 @@ public class JfxView {
     private Node createCurrentSearchSkillsWidget() {
         searchSkillsBox = new HBox();
         return searchSkillsBox;
+    }
+
+    private double averageForSkills(Applicant a) {
+
+        int count = searchSkillsBox.getChildren().size();
+        if (count == 0) return 0.0;
+        int sum = 0;
+        for (Node n : searchSkillsBox.getChildren()) {
+            String nameSkill = ((Button)n ).getText();
+            sum+=a.getSkill(nameSkill);
+
+        }
+        return sum / (double) count;
     }
 }
