@@ -30,7 +30,7 @@ public class JfxView {
         ALL_60("tout \u2265 60%", 60);
         private final String label;
         private final int threshold;
-
+        
         Strategy(String label, int threshold) {
             this.label = label;
             this.threshold = threshold;
