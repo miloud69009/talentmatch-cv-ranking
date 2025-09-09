@@ -26,14 +26,14 @@ public class JfxView {
     private VBox resultBox;
     private ComboBox<Strategy> strategyBox;
 
-    private static enum Strategy {
+    private enum Strategy {
         ALL_50("tout \u2265 50%", 50),
         ALL_60("tout \u2265 60%", 60),
         AVG_50("moyenne \u2265 50%", 50);
         private final String label;
         private final int threshold;
         
-        Strategy(String label, int threshold) {
+        Strategy(final String label, final int threshold) {
             this.label = label;
             this.threshold = threshold;
         }
@@ -211,16 +211,17 @@ public class JfxView {
         return searchSkillsBox;
     }
 
-    private double averageForSkills(Applicant a) {
-
+    private double averageForSkills(final Applicant a) {
         int count = searchSkillsBox.getChildren().size();
-        if (count == 0) return 0.0;
+        if (count == 0) {
+            return 0.0;
+        }
         int sum = 0;
         for (Node n : searchSkillsBox.getChildren()) {
-            String nameSkill = ((Button)n ).getText();
-            sum+=a.getSkill(nameSkill);
-
+            String nameSkill = ((Button) n).getText();
+            sum += a.getSkill(nameSkill);
         }
         return sum / (double) count;
     }
+
 }
