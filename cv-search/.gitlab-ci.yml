@@ -1,0 +1,16 @@
+image: ghcr.io/univ-lyon1-mif/maven-openjfx:21
+
+cache:
+  key: "m2-cache"
+  paths:
+    - .m2/repository
+
+stages:
+  - test
+
+test:
+  stage: test
+  before_script:
+    - ./cv-search/setup-mvn-proxy.sh
+  script:
+    - cd cv-search && mvn --batch-mode test
