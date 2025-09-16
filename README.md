@@ -34,6 +34,7 @@ Barème : 40% examen / 10% QCM en amphi / 50% TP (une note pour le rapport, une 
 * [Abdelhakim Boudraa](https://www.linkedin.com/in/hakimbdr/)
 
 ## Enseignement présentiel, vidéos et messagerie instantanée
+s
 
 En complément des séances en présentiel, les étudiants qui le souhaitent peuvent utiliser les vidéos préparées en 2020 pour les cours magistraux (disponibles sur la plateforme My Video Lyon 1, et sur la [playlist youtube](https://www.youtube.com/playlist?list=PL6-YbcqXawf5ED3NHDZYejWJaAschnrO0)). Attention, le contenu du cours a un peu évolué depuis, regarder les vidéos ne dispense pas de venir en CM !
 
