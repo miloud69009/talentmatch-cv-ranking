@@ -3,6 +3,8 @@ package fr.univ_lyon1.info.m1.cv_search.controller;
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import fr.univ_lyon1.info.m1.cv_search.model.AllAtLeastStrategy;
 import fr.univ_lyon1.info.m1.cv_search.model.AverageAtLeastStrategy;
+import fr.univ_lyon1.info.m1.cv_search.model.StrategyFactory;
+import fr.univ_lyon1.info.m1.cv_search.model.SelectionStrategy;
 
 public class CvController {
     private final SearchModel model;
@@ -23,7 +25,7 @@ public class CvController {
         model.removeRequiredSkill(skill);
     }
 
-    public void setAllAtLeast50() {
+    /* public void setAllAtLeast50() {
         model.setStrategy(new AllAtLeastStrategy(50, "tout >= 50%"));
     }
 
@@ -33,6 +35,10 @@ public class CvController {
 
     public void setAverageAtLeast50() {
         model.setStrategy(new AverageAtLeastStrategy(50, "moyenne >=50%"));
+    }*/
+
+    public void setStrategy(final SelectionStrategy strategy) {
+        model.setStrategy(strategy);
     }
     public void search() {
         model.search();

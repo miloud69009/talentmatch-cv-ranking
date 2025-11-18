@@ -5,6 +5,10 @@ import fr.univ_lyon1.info.m1.cv_search.controller.CvController;
 import fr.univ_lyon1.info.m1.cv_search.model.ApplicantScore;
 import fr.univ_lyon1.info.m1.cv_search.model.ModelListener;
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
+import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
+import fr.univ_lyon1.info.m1.cv_search.model.StrategyFactory;
+import fr.univ_lyon1.info.m1.cv_search.model.SelectionStrategy;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -30,7 +34,7 @@ public class JfxView implements ModelListener {
     private ComboBox<StrategyChoice> strategyBox;
     private TextField skillTextField;
 
-    private enum StrategyChoice {
+   /* private enum StrategyChoice {
         ALL_50("tout ≥ 50%"),
         ALL_60("tout ≥ 60%"),
         AVG_50("moyenne ≥ 50%");
@@ -45,7 +49,7 @@ public class JfxView implements ModelListener {
         public String toString() {
             return label;
         }
-    }
+    }*/
 
     /**
      * Create the main view of the application.
@@ -150,12 +154,16 @@ public class JfxView implements ModelListener {
             if (controller == null) {
                 return;
             }
-            StrategyChoice choice = strategyBox.getValue();
+            /*StrategyChoice choice = strategyBox.getValue();
             switch (choice) {
                 case ALL_50 -> controller.setAllAtLeast50();
                 case ALL_60 -> controller.setAllAtLeast60();
                 case AVG_50 -> controller.setAverageAtLeast50();
-            }
+            }*/
+            StrategyChoice choice = strategyBox.getValue();
+
+            SelectionStrategy strat = StrategyFactory.create(choice);
+            controller.setStrategy(strat);
         });
 
         box.getChildren().addAll(label, strategyBox);
