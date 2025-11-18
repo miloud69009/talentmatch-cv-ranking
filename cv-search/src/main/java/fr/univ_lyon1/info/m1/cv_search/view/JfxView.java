@@ -1,10 +1,10 @@
 package fr.univ_lyon1.info.m1.cv_search.view;
 
-import java.io.File;
 
-import fr.univ_lyon1.info.m1.cv_search.model.Applicant;
-import fr.univ_lyon1.info.m1.cv_search.model.ApplicantList;
-import fr.univ_lyon1.info.m1.cv_search.model.ApplicantListBuilder;
+import fr.univ_lyon1.info.m1.cv_search.controller.CvController;
+import fr.univ_lyon1.info.m1.cv_search.model.ApplicantScore;
+import fr.univ_lyon1.info.m1.cv_search.model.ModelListener;
+import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -16,42 +16,45 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
+import java.util.List;
 
 
 /**
  * Main view of the application, implemented using JavaFX.
  */
-public class JfxView {
+public class JfxView implements ModelListener {
+    private final SearchModel model;
+    private CvController controller;
     private HBox searchSkillsBox;
     private VBox resultBox;
-    private ComboBox<Strategy> strategyBox;
+    private ComboBox<StrategyChoice> strategyBox;
+    private TextField skillTextField;
 
-    private enum Strategy {
-        ALL_50("tout \u2265 50%", 50),
-        ALL_60("tout \u2265 60%", 60),
-        AVG_50("moyenne \u2265 50%", 50);
+    private enum StrategyChoice {
+        ALL_50("tout ≥ 50%"),
+        ALL_60("tout ≥ 60%"),
+        AVG_50("moyenne ≥ 50%");
+
         private final String label;
-        private final int threshold;
-        
-        Strategy(final String label, final int threshold) {
+
+        StrategyChoice(String label) {
             this.label = label;
-            this.threshold = threshold;
         }
 
         @Override
         public String toString() {
             return label;
         }
-
-        public int threshold() {
-            return threshold;
-        }
     }
 
     /**
      * Create the main view of the application.
      */
-    public JfxView(final Stage stage, final int width, final int height) {
+    public JfxView(final Stage stage, final int width, final int height, SearchModel model) {
+        this.model = model;
+        this.model.addListener(this);
+
+
         // Name of window
         stage.setTitle("Search for CV");
 
@@ -79,6 +82,10 @@ public class JfxView {
     }
 
 
+    public void setController(CvController controller) {
+        this.controller = controller;
+    }
+
     /**
      * Create the text field to enter a new skill.
      */
@@ -90,26 +97,18 @@ public class JfxView {
         newSkillBox.getChildren().addAll(labelSkill, textField, submitButton);
         newSkillBox.setSpacing(10);
 
-        EventHandler<ActionEvent> skillHandler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent event) {
+        EventHandler<ActionEvent> skillHandler = event -> {
+
                 String text = textField.getText().strip();
-                if (text.equals("")) {
+                if (text.isEmpty()) {
                     return; // Do nothing
                 }
-
-                Button skillBtn = new Button(text);
-                searchSkillsBox.getChildren().add(skillBtn);
-                skillBtn.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(final ActionEvent event) {
-                        searchSkillsBox.getChildren().remove(skillBtn);
-                    }
-                });
-
+                if (controller != null) {
+                    controller.addRequiredSkill(text);
+                }
                 textField.setText("");
                 textField.requestFocus();
-            }
+
         };
         submitButton.setOnAction(skillHandler);
         textField.setOnAction(skillHandler);
@@ -129,74 +128,36 @@ public class JfxView {
      */
     private Node createSearchWidget() {
         Button search = new Button("Search");
-        search.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent event) {
-                // lire la stratégie choisie (défaut: ALL_50)
-                Strategy chosen = (strategyBox != null && strategyBox.getValue() != null)
-                        ? strategyBox.getValue()
-                        : Strategy.ALL_50;
-                int threshold = chosen.threshold();
-
-                // charger les candidats
-                ApplicantList listApplicants = new ApplicantListBuilder(new File(".")).build();
-
-                // clear résultats
-                resultBox.getChildren().clear();
-
-                for (Applicant a : listApplicants) {
-                    boolean selected;
-
-                    if (chosen == Strategy.AVG_50) {
-                        // --- Cas "moyenne ≥ 50%"
-                        int count = searchSkillsBox.getChildren().size();
-                        if (count == 0) {
-                            selected = true; // aucun critère -> on accepte
-                        } else {
-                            int sum = 0;
-                            for (Node skill : searchSkillsBox.getChildren()) {
-                                String skillName = ((Button) skill).getText();
-                                sum += a.getSkill(skillName);
-                            }
-                            double avg = sum / (double) count; // division réelle
-                            selected = (avg >= 50.0);
-                        }
-                    } else {
-                        // --- Cas "tout ≥ seuil" (50% ou 60%)
-                        selected = true;
-                        for (Node skill : searchSkillsBox.getChildren()) {
-                            String skillName = ((Button) skill).getText();
-                            if (a.getSkill(skillName) < threshold) {
-                                selected = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (selected) {
-                        double avg = averageForSkills(a);
-                        String line;
-                        if (searchSkillsBox.getChildren().isEmpty()) {
-                            line = a.getName() + " — N/A"; // pas de compétences demandées
-                        } else {
-                            line = a.getName() + " — " + String.format("%.1f%%", avg);
-                        }
-                        resultBox.getChildren().add(new Label(line));
-                    }
-
-                }
+        search.setOnAction(event -> {
+            if (controller != null) {
+                controller.search();
             }
+            // Les résultats seront affichés dans modelUpdate()
         });
         return search;
     }
+
 
 
     private Node createStrategyWidget() {
         HBox box = new HBox();
         Label label = new Label("Strategy:");
         strategyBox = new ComboBox<>();
-        strategyBox.getItems().addAll(Strategy.ALL_50, Strategy.ALL_60, Strategy.AVG_50);
-        strategyBox.getSelectionModel().select(Strategy.ALL_50);
+        strategyBox.getItems().addAll(StrategyChoice.ALL_50, StrategyChoice.AVG_50, StrategyChoice.ALL_60);
+        strategyBox.getSelectionModel().select(StrategyChoice.ALL_50);
+
+        strategyBox.setOnAction(event -> {
+            if (controller == null) {
+                return;
+            }
+            StrategyChoice choice = strategyBox.getValue();
+            switch (choice) {
+                case ALL_50 -> controller.setAllAtLeast50();
+                case ALL_60 -> controller.setAllAtLeast60();
+                case AVG_50 -> controller.setAverageAtLeast50();
+            }
+        });
+
         box.getChildren().addAll(label, strategyBox);
         box.setSpacing(10);
         return box;
@@ -211,17 +172,29 @@ public class JfxView {
         return searchSkillsBox;
     }
 
-    private double averageForSkills(final Applicant a) {
-        int count = searchSkillsBox.getChildren().size();
-        if (count == 0) {
-            return 0.0;
+    @Override
+    public void modelUpdate() {
+        // 1) Mettre à jour les skills affichées
+        searchSkillsBox.getChildren().clear();
+        List<String> skills = model.getRequiredSkills();
+        for (String skill : skills) {
+            Button skillBtn = new Button(skill);
+            skillBtn.setOnAction(event -> {
+                if (controller != null) {
+                    controller.removeRequiredSkill(skill);
+                }
+            });
+            searchSkillsBox.getChildren().add(skillBtn);
         }
-        int sum = 0;
-        for (Node n : searchSkillsBox.getChildren()) {
-            String nameSkill = ((Button) n).getText();
-            sum += a.getSkill(nameSkill);
+
+        // 2) Mettre à jour les résultats
+        resultBox.getChildren().clear();
+        for (ApplicantScore as : model.getResults()) {
+            String text = as.getApplicant().getName()
+                    + " — "
+                    + String.format("%.1f", as.getScore());
+            resultBox.getChildren().add(new Label(text));
         }
-        return sum / (double) count;
     }
 
 }

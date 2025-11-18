@@ -1,8 +1,12 @@
 package fr.univ_lyon1.info.m1.cv_search;
 
-import fr.univ_lyon1.info.m1.cv_search.view.JfxView;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
+import fr.univ_lyon1.info.m1.cv_search.controller.CvController;
+import fr.univ_lyon1.info.m1.cv_search.model.AllAtLeastStrategy;
+import fr.univ_lyon1.info.m1.cv_search.view.JfxView;
+import java.io.File;
 
 /**
  * Main class for the application (structure imposed by JavaFX).
@@ -14,7 +18,16 @@ public class App extends Application {
      */
     @Override
     public void start(final Stage stage) throws Exception {
-        new JfxView(stage, 600, 600);
+        SearchModel model = new SearchModel(
+                new File("."),
+                new AllAtLeastStrategy(50, "tout >= 50%")
+        );
+
+        JfxView view = new JfxView(stage, 600, 600, model);
+
+        CvController controller = new CvController(model);
+
+        view.setController(controller);
     }
 
 
