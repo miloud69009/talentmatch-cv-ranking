@@ -13,17 +13,25 @@ public class SearchModel {
 
     private SelectionStrategy strategy;
 
+    private StrategyChoice currentChoice;
+
     private List<ApplicantScore> results = new ArrayList<>();
 
     private List<ModelListener> listeners = new ArrayList<>();
 
-    public SearchModel(File directory, SelectionStrategy initialStrategy) {
+  /*  public SearchModel(File directory, SelectionStrategy initialStrategy) {
 
         this.applicants= new ApplicantListBuilder(directory).build();
         this.strategy = initialStrategy;
 
 
+    }*/
+
+    public SearchModel(final File directory, final StrategyChoice initialChoice) {
+        this.applicants = new ApplicantListBuilder(directory).build();
+        setStrategyChoice(initialChoice);   // initialise strategy + currentChoice
     }
+
     public void addRequiredSkill(String skill) {
 
         if(skill == null) {
@@ -46,7 +54,7 @@ public class SearchModel {
         }
     }
 
-    public void setStrategy(SelectionStrategy strategy) {
+    /*public void setStrategy(SelectionStrategy strategy) {
 
         if(strategy == null) {
             return;
@@ -54,7 +62,21 @@ public class SearchModel {
         this.strategy = strategy;
         notifyListeners();
 
+    }*/
+    public void setStrategyChoice(final StrategyChoice choice) {
+        if (choice == null) {
+            return;
+        }
+        currentChoice = choice;
+        strategy = StrategyFactory.create(choice);
+        notifyListeners();
     }
+
+    public StrategyChoice getStrategyChoice() {
+        return currentChoice;
+    }
+
+
 
     public void search() {
 

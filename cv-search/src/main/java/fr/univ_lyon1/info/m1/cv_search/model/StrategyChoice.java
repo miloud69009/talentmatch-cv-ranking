@@ -6,7 +6,8 @@ package fr.univ_lyon1.info.m1.cv_search.model;
 public enum StrategyChoice {
     ALL_50("tout ≥ 50%"),
     ALL_60("tout ≥ 60%"),
-    AVG_50("moyenne ≥ 50%");
+    AVG_50("moyenne ≥ 50%"),
+    ALL_80("tout >= 80%");
 
     private final String label;
 

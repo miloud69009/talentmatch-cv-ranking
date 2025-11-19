@@ -12,6 +12,7 @@ public class StrategyFactory {
         return switch (choice) {
             case ALL_50 -> new AllAtLeastStrategy(50, "tout ≥ 50%");
             case ALL_60 -> new AllAtLeastStrategy(60, "tout ≥ 60%");
+            case ALL_80 -> new AllAtLeastStrategy(80, "tout ≥ 80%");
             case AVG_50 -> new AverageAtLeastStrategy(50, "moyenne ≥ 50%");
             };
 

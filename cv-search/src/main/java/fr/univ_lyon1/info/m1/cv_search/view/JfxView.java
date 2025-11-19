@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import java.util.List;
+import javafx.geometry.Pos;
 
 
 /**
@@ -147,7 +148,7 @@ public class JfxView implements ModelListener {
         HBox box = new HBox();
         Label label = new Label("Strategy:");
         strategyBox = new ComboBox<>();
-        strategyBox.getItems().addAll(StrategyChoice.ALL_50, StrategyChoice.AVG_50, StrategyChoice.ALL_60);
+        strategyBox.getItems().addAll(StrategyChoice.values());
         strategyBox.getSelectionModel().select(StrategyChoice.ALL_50);
 
         strategyBox.setOnAction(event -> {
@@ -162,8 +163,9 @@ public class JfxView implements ModelListener {
             }*/
             StrategyChoice choice = strategyBox.getValue();
 
-            SelectionStrategy strat = StrategyFactory.create(choice);
-            controller.setStrategy(strat);
+           // SelectionStrategy strat = StrategyFactory.create(choice);
+            // controller.setStrategy(strat);
+            controller.setStrategyChoice(choice);
         });
 
         box.getChildren().addAll(label, strategyBox);
@@ -182,17 +184,33 @@ public class JfxView implements ModelListener {
 
     @Override
     public void modelUpdate() {
+        // 0) Synchroniser la ComboBox stratégie
+        StrategyChoice choice = model.getStrategyChoice();
+        if (choice != null && strategyBox.getValue() != choice) {
+            strategyBox.getSelectionModel().select(choice);
+        }
         // 1) Mettre à jour les skills affichées
         searchSkillsBox.getChildren().clear();
         List<String> skills = model.getRequiredSkills();
         for (String skill : skills) {
-            Button skillBtn = new Button(skill);
-            skillBtn.setOnAction(event -> {
+
+            HBox box = new HBox();
+            Label labelSkill = new Label(skill + " ");
+            Button removeButton = new Button("x");
+            removeButton.setOnAction(event -> {
                 if (controller != null) {
                     controller.removeRequiredSkill(skill);
                 }
             });
-            searchSkillsBox.getChildren().add(skillBtn);
+            box.setStyle("-fx-padding: 2;"
+                    + "-fx-border-style: solid inside;"
+                    + "-fx-border-width: 1;"
+                    + "-fx-border-insets: 5;"
+                    + "-fx-border-radius: 5;"
+                    + "-fx-border-color: black;");
+            box.setAlignment(Pos.BASELINE_CENTER);
+            box.getChildren().addAll(labelSkill, removeButton);
+            searchSkillsBox.getChildren().add(box);
         }
 
         // 2) Mettre à jour les résultats

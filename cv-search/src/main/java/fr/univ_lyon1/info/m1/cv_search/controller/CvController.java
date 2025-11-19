@@ -5,6 +5,7 @@ import fr.univ_lyon1.info.m1.cv_search.model.AllAtLeastStrategy;
 import fr.univ_lyon1.info.m1.cv_search.model.AverageAtLeastStrategy;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyFactory;
 import fr.univ_lyon1.info.m1.cv_search.model.SelectionStrategy;
+import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
 
 public class CvController {
     private final SearchModel model;
@@ -37,9 +38,14 @@ public class CvController {
         model.setStrategy(new AverageAtLeastStrategy(50, "moyenne >=50%"));
     }*/
 
-    public void setStrategy(final SelectionStrategy strategy) {
+    /*public void setStrategy(final SelectionStrategy strategy) {
         model.setStrategy(strategy);
+    }*/
+
+    public void setStrategyChoice(final StrategyChoice choice) {
+        model.setStrategyChoice(choice);
     }
+
     public void search() {
         model.search();
     }
