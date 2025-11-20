@@ -15,6 +15,7 @@ public class SearchModel {
 
     private StrategyChoice currentChoice;
 
+
     private List<ApplicantScore> results = new ArrayList<>();
 
     private List<ModelListener> listeners = new ArrayList<>();
@@ -63,14 +64,18 @@ public class SearchModel {
         notifyListeners();
 
     }*/
-    public void setStrategyChoice(final StrategyChoice choice) {
+   public void setStrategyChoice(final StrategyChoice choice) {
         if (choice == null) {
             return;
         }
         currentChoice = choice;
+
         strategy = StrategyFactory.create(choice);
         notifyListeners();
     }
+
+
+
 
     public StrategyChoice getStrategyChoice() {
         return currentChoice;
@@ -79,7 +84,6 @@ public class SearchModel {
 
 
     public void search() {
-
         results.clear();
 
         if (strategy == null) {
@@ -95,7 +99,6 @@ public class SearchModel {
                 results.add(as);
             }
         }
-
         Collections.sort(results);
 
         notifyListeners();

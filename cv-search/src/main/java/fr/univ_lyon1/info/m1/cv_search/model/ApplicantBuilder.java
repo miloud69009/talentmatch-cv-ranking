@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -47,11 +50,47 @@ public class ApplicantBuilder {
         // Cast may fail if the Yaml is incorrect. Ideally we should provide
         // clean error messages.
         @SuppressWarnings("unchecked")
-        Map<String, Integer> skills = (Map<String, Integer>) map.get("skills");
+        Map<String, Object> skillsMap = (Map<String, Object>) map.get("skills");
+        if (skillsMap != null) {
+            for (Map.Entry<String, Object> entry : skillsMap.entrySet()) {
+                String skillName = entry.getKey();
+                Object valueObj = entry.getValue();
 
-        for (String skill : skills.keySet()) {
-            Integer value = skills.get(skill);
-            a.setSkill(skill, value);
+                int value;
+                if (valueObj instanceof Integer) {
+                    value = (Integer) valueObj;
+                } else if (valueObj instanceof Number) {
+                    value = ((Number) valueObj).intValue();
+                } else {
+                    continue;
+                }
+
+                a.setSkill(skillName, value);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> expMap = (Map<String, Object>) map.get("experience");
+
+        if (expMap != null) {
+            for (Map.Entry<String, Object> entry : expMap.entrySet()) {
+                String company = entry.getKey();
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> expData = (Map<String, Object>) entry.getValue();
+
+                int start = (Integer) expData.get("start");
+                int end = (Integer) expData.get("end");
+
+                @SuppressWarnings("unchecked")
+                List<String> keywords = (List<String>) expData.get("keywords");
+
+                ExperienceEntry exp =
+                        new ExperienceEntry(company, start, end, keywords);
+
+                // ✔️ addExperience(company, exp)
+                a.addExperience(company, exp);
+            }
         }
 
         return a;

@@ -8,12 +8,19 @@ public class StrategyFactory {
     private StrategyFactory() {
 
     }
+    private static final double YEARS_WEIGHT = 0.2;
+
     public static SelectionStrategy create(final StrategyChoice choice) {
         return switch (choice) {
             case ALL_50 -> new AllAtLeastStrategy(50, "tout ≥ 50%");
             case ALL_60 -> new AllAtLeastStrategy(60, "tout ≥ 60%");
             case ALL_80 -> new AllAtLeastStrategy(80, "tout ≥ 80%");
             case AVG_50 -> new AverageAtLeastStrategy(50, "moyenne ≥ 50%");
+            case AVG_50_EXP ->
+                    new ExperienceBonusStrategyDecorator(
+                            new AverageAtLeastStrategy(50, "moyenne ≥ 50%"),
+                            YEARS_WEIGHT
+                    );
             };
 
     }

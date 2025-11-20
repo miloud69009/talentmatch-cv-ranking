@@ -7,7 +7,8 @@ public enum StrategyChoice {
     ALL_50("tout ≥ 50%"),
     ALL_60("tout ≥ 60%"),
     AVG_50("moyenne ≥ 50%"),
-    ALL_80("tout >= 80%");
+    ALL_80("tout >= 80%"),
+    AVG_50_EXP("moyenne ≥ 50% + exp");
 
     private final String label;
 

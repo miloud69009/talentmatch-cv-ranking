@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import java.util.List;
 import javafx.geometry.Pos;
+import java.util.ArrayList;
 
 
 /**
@@ -215,12 +216,37 @@ public class JfxView implements ModelListener {
 
         // 2) Mettre à jour les résultats
         resultBox.getChildren().clear();
+        // Compétences recherchées actuellement
+        List<String> required = model.getRequiredSkills();
+
         for (ApplicantScore as : model.getResults()) {
-            String text = as.getApplicant().getName()
+            var applicant = as.getApplicant();
+
+            // Construire un petit résumé de compétences
+            List<String> skillSummaries = new java.util.ArrayList<>();
+            for (String skill : required) {
+                int value = applicant.getSkill(skill);
+                if (value > 0) {
+                    skillSummaries.add(skill + "=" + value);
+                }
+            }
+
+            String skillsText;
+            if (skillSummaries.isEmpty()) {
+                skillsText = "(aucune compétence requise trouvée)";
+            } else {
+                skillsText = " | Compétences : " + String.join(", ", skillSummaries);
+            }
+
+            String text = applicant.getName()
                     + " — "
-                    + String.format("%.1f", as.getScore());
+                    + String.format("%.1f", as.getScore())
+                    + skillsText;
+
             resultBox.getChildren().add(new Label(text));
         }
+
+
     }
 
 }
