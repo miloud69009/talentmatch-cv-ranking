@@ -2,8 +2,6 @@ package fr.univ_lyon1.info.m1.cv_search.model;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -29,17 +27,35 @@ public class Applicant {
         skills.put(skillName, value);
     }
 
+    /**
+     * @return the applicant's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the applicant's name.
+     *
+     * @param name the new name
+     */
     public void setName(final String name) {
         this.name = name;
     }
+
+    /**
+     * Add a professional experience for this applicant.
+     *
+     * @param company the company name (used as key)
+     * @param exp     the experience entry
+     */
     public void addExperience(final String company, final ExperienceEntry exp) {
         experiences.put(company, exp);
     }
 
+    /**
+     * @return an unmodifiable view of the applicant's experiences
+     */
     public Map<String, ExperienceEntry> getExperiences() {
         return Collections.unmodifiableMap(experiences);
     }

@@ -1,29 +1,25 @@
 package fr.univ_lyon1.info.m1.cv_search.view;
 
-
 import fr.univ_lyon1.info.m1.cv_search.controller.CvController;
 import fr.univ_lyon1.info.m1.cv_search.model.ApplicantScore;
 import fr.univ_lyon1.info.m1.cv_search.model.ModelListener;
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
-import fr.univ_lyon1.info.m1.cv_search.model.StrategyFactory;
-import fr.univ_lyon1.info.m1.cv_search.model.SelectionStrategy;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.ComboBox;
-import java.util.List;
-import javafx.geometry.Pos;
-import java.util.ArrayList;
 
+import java.util.List;
 
 /**
  * Main view of the application, implemented using JavaFX.
@@ -36,30 +32,20 @@ public class JfxView implements ModelListener {
     private ComboBox<StrategyChoice> strategyBox;
     private TextField skillTextField;
 
-   /* private enum StrategyChoice {
-        ALL_50("tout ≥ 50%"),
-        ALL_60("tout ≥ 60%"),
-        AVG_50("moyenne ≥ 50%");
-
-        private final String label;
-
-        StrategyChoice(String label) {
-            this.label = label;
-        }
-
-        @Override
-        public String toString() {
-            return label;
-        }
-    }*/
-
     /**
      * Create the main view of the application.
+     *
+     * @param stage  primary stage
+     * @param width  window width
+     * @param height window height
+     * @param model  search model
      */
-    public JfxView(final Stage stage, final int width, final int height, SearchModel model) {
+    public JfxView(final Stage stage,
+                   final int width,
+                   final int height,
+                   final SearchModel model) {
         this.model = model;
         this.model.addListener(this);
-
 
         // Name of window
         stage.setTitle("Search for CV");
@@ -69,17 +55,17 @@ public class JfxView implements ModelListener {
         Node newSkillBox = createNewSkillWidget();
         root.getChildren().add(newSkillBox);
 
-        Node searchSkillsBox = createCurrentSearchSkillsWidget();
-        root.getChildren().add(searchSkillsBox);
+        Node searchSkillsBoxNode = createCurrentSearchSkillsWidget();
+        root.getChildren().add(searchSkillsBoxNode);
+
         Node strategy = createStrategyWidget();
         root.getChildren().add(strategy);
-
 
         Node search = createSearchWidget();
         root.getChildren().add(search);
 
-        Node resultBox = createResultsWidget();
-        root.getChildren().add(resultBox);
+        Node resultBoxNode = createResultsWidget();
+        root.getChildren().add(resultBoxNode);
 
         // Everything's ready: add it to the scene and display it
         Scene scene = new Scene(root, width, height);
@@ -87,8 +73,12 @@ public class JfxView implements ModelListener {
         stage.show();
     }
 
-
-    public void setController(CvController controller) {
+    /**
+     * Set controller for this view.
+     *
+     * @param controller controller to use
+     */
+    public void setController(final CvController controller) {
         this.controller = controller;
     }
 
@@ -99,23 +89,33 @@ public class JfxView implements ModelListener {
         HBox newSkillBox = new HBox();
         Label labelSkill = new Label("Skill:");
         TextField textField = new TextField();
+        skillTextField = textField;
+
         Button submitButton = new Button("Add skill");
-        newSkillBox.getChildren().addAll(labelSkill, textField, submitButton);
+        Button clearButton = new Button("Clear");
+
+        clearButton.setOnAction(event -> {
+            if (controller != null) {
+                controller.clearSkills();
+            }
+        });
+
+        newSkillBox.getChildren().addAll(labelSkill, textField,
+                submitButton, clearButton);
         newSkillBox.setSpacing(10);
 
         EventHandler<ActionEvent> skillHandler = event -> {
-
-                String text = textField.getText().strip();
-                if (text.isEmpty()) {
-                    return; // Do nothing
-                }
-                if (controller != null) {
-                    controller.addRequiredSkill(text);
-                }
-                textField.setText("");
-                textField.requestFocus();
-
+            String text = textField.getText().strip();
+            if (text.isEmpty()) {
+                return; // Do nothing
+            }
+            if (controller != null) {
+                controller.addRequiredSkill(text);
+            }
+            textField.setText("");
+            textField.requestFocus();
         };
+
         submitButton.setOnAction(skillHandler);
         textField.setOnAction(skillHandler);
         return newSkillBox;
@@ -138,13 +138,14 @@ public class JfxView implements ModelListener {
             if (controller != null) {
                 controller.search();
             }
-            // Les résultats seront affichés dans modelUpdate()
+            // Results will be displayed in modelUpdate()
         });
         return search;
     }
 
-
-
+    /**
+     * Create the widget used to select the strategy.
+     */
     private Node createStrategyWidget() {
         HBox box = new HBox();
         Label label = new Label("Strategy:");
@@ -156,16 +157,7 @@ public class JfxView implements ModelListener {
             if (controller == null) {
                 return;
             }
-            /*StrategyChoice choice = strategyBox.getValue();
-            switch (choice) {
-                case ALL_50 -> controller.setAllAtLeast50();
-                case ALL_60 -> controller.setAllAtLeast60();
-                case AVG_50 -> controller.setAverageAtLeast50();
-            }*/
             StrategyChoice choice = strategyBox.getValue();
-
-           // SelectionStrategy strat = StrategyFactory.create(choice);
-            // controller.setStrategy(strat);
             controller.setStrategyChoice(choice);
         });
 
@@ -175,8 +167,7 @@ public class JfxView implements ModelListener {
     }
 
     /**
-     * Create the widget showing the list of skills currently searched
-     * for.
+     * Create the widget showing the list of skills currently searched for.
      */
     private Node createCurrentSearchSkillsWidget() {
         searchSkillsBox = new HBox();
@@ -185,16 +176,16 @@ public class JfxView implements ModelListener {
 
     @Override
     public void modelUpdate() {
-        // 0) Synchroniser la ComboBox stratégie
+        // 0) Synchronize strategy ComboBox
         StrategyChoice choice = model.getStrategyChoice();
         if (choice != null && strategyBox.getValue() != choice) {
             strategyBox.getSelectionModel().select(choice);
         }
-        // 1) Mettre à jour les skills affichées
+
+        // 1) Update displayed skills
         searchSkillsBox.getChildren().clear();
         List<String> skills = model.getRequiredSkills();
         for (String skill : skills) {
-
             HBox box = new HBox();
             Label labelSkill = new Label(skill + " ");
             Button removeButton = new Button("x");
@@ -214,16 +205,18 @@ public class JfxView implements ModelListener {
             searchSkillsBox.getChildren().add(box);
         }
 
-        // 2) Mettre à jour les résultats
+        // 2) Update results
         resultBox.getChildren().clear();
-        // Compétences recherchées actuellement
+
+        // Current required skills
         List<String> required = model.getRequiredSkills();
 
         for (ApplicantScore as : model.getResults()) {
             var applicant = as.getApplicant();
 
-            // Construire un petit résumé de compétences
-            List<String> skillSummaries = new java.util.ArrayList<>();
+            // Build a small skill summary
+            java.util.List<String> skillSummaries =
+                    new java.util.ArrayList<>();
             for (String skill : required) {
                 int value = applicant.getSkill(skill);
                 if (value > 0) {
@@ -233,9 +226,11 @@ public class JfxView implements ModelListener {
 
             String skillsText;
             if (skillSummaries.isEmpty()) {
-                skillsText = "(aucune compétence requise trouvée)";
+                skillsText = " | Compétences : (aucune trouvée)";
             } else {
-                skillsText = " | Compétences : " + String.join(", ", skillSummaries);
+                skillsText =
+                        " | Compétences : "
+                                + String.join(", ", skillSummaries);
             }
 
             String text = applicant.getName()
@@ -245,8 +240,5 @@ public class JfxView implements ModelListener {
 
             resultBox.getChildren().add(new Label(text));
         }
-
-
     }
-
 }

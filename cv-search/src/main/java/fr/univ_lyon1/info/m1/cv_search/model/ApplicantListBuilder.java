@@ -3,30 +3,41 @@ package fr.univ_lyon1.info.m1.cv_search.model;
 import java.io.File;
 
 /**
- * Builder reading Yaml files in a directory to build Applicants.
+ * Builder reading YAML files in a directory to construct an {@link ApplicantList}.
  */
-public class ApplicantListBuilder {
+public final class ApplicantListBuilder {
 
-    private File directory;
+    private final File directory;
 
     /**
-     * @param directory Directory where Yaml files for applicants should be searched.
+     * Constructor.
+     *
+     * @param directory Directory where YAML files for applicants should be searched.
      */
     public ApplicantListBuilder(final File directory) {
         this.directory = directory;
     }
 
     /**
-     * Build the list of applicants.
+     * Builds the list of applicants found in the directory.
+     *
+     * @return the built applicant list
      */
     public ApplicantList build() {
         ApplicantList applicants = new ApplicantList();
-        for (File f : directory.listFiles()) {
-            if (f.isFile() && f.getName().endsWith(".yaml")) {
-                Applicant a = new ApplicantBuilder(f).build();
-                applicants.add(a);
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return applicants;
+        }
+
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(".yaml")) {
+                Applicant applicant = new ApplicantBuilder(file).build();
+                applicants.add(applicant);
             }
         }
+
         return applicants;
     }
 }

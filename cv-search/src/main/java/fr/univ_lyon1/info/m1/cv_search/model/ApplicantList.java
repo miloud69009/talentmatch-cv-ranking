@@ -5,19 +5,26 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Wrapper around {@link List<Applicant>} implementing the observer pattern.
+ * Wrapper around {@link List} of {@link Applicant}.
+ * Provides iteration utilities for the list of applicants.
  */
 public class ApplicantList implements Iterable<Applicant> {
-//TODO: checkstyle will (rightfully) complain about this brace. Make sure it does, and then fix it.
 
-    private List<Applicant> list = new ArrayList<Applicant>();
+    private List<Applicant> list = new ArrayList<>();
 
-    void add(final Applicant a) {
-        list.add(a);
+    /**
+     * Adds an applicant to the list.
+     *
+     * @param applicant the applicant to add
+     */
+    void add(final Applicant applicant) {
+        list.add(applicant);
     }
 
     /**
-     * Get the number of applicants in the list.
+     * Returns the number of applicants in the list.
+     *
+     * @return size of the list
      */
     public int size() {
         return list.size();
@@ -28,13 +35,19 @@ public class ApplicantList implements Iterable<Applicant> {
         return list.iterator();
     }
 
-    /** Clear the list of applicants. */
+    /**
+     * Clears the list of applicants.
+     */
     public void clear() {
         list.clear();
     }
 
-    /** Sets the content of the applicant list. */
-    public void setList(final ApplicantList list) {
-        this.list = list.list;
+    /**
+     * Replaces the content of this list with the content of another list.
+     *
+     * @param other the applicant list used as replacement
+     */
+    public void setList(final ApplicantList other) {
+        this.list = other.list;
     }
 }

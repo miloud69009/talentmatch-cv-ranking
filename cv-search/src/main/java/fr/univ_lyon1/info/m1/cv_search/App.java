@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import fr.univ_lyon1.info.m1.cv_search.controller.CvController;
-import fr.univ_lyon1.info.m1.cv_search.model.AllAtLeastStrategy;
 import fr.univ_lyon1.info.m1.cv_search.view.JfxView;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
 

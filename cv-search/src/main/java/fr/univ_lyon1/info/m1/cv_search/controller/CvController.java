@@ -1,51 +1,62 @@
 package fr.univ_lyon1.info.m1.cv_search.controller;
 
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
-import fr.univ_lyon1.info.m1.cv_search.model.AllAtLeastStrategy;
-import fr.univ_lyon1.info.m1.cv_search.model.AverageAtLeastStrategy;
-import fr.univ_lyon1.info.m1.cv_search.model.StrategyFactory;
-import fr.univ_lyon1.info.m1.cv_search.model.SelectionStrategy;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
 
-public class CvController {
+/**
+ * Controller between the view and the {@link SearchModel}.
+ * Receives user actions from the view and updates the model.
+ */
+public final class CvController {
     private final SearchModel model;
-    //private final JfxView view;
 
-    public CvController(SearchModel model/*, JfxView view*/) {
+    /**
+     * Create a controller bound to the given model.
+     *
+     * @param model The search model to control.
+     */
+    public CvController(final SearchModel model) {
         this.model = model;
-      //  this.view = view;
-
-       // model.addListener(view);
     }
 
-    public void addRequiredSkill(String skill) {
+    /**
+     * Add a required skill to the model.
+     *
+     * @param skill Name of the skill to add.
+     */
+    public void addRequiredSkill(final String skill) {
         model.addRequiredSkill(skill);
     }
 
-    public void removeRequiredSkill(String skill) {
+    /**
+     * Clear all required skills and refresh the search results.
+     */
+    public void clearSkills() {
+        model.clearRequiredSkills();
+        model.search();
+    }
+
+    /**
+     * Remove a required skill from the model.
+     *
+     * @param skill Name of the skill to remove.
+     */
+    public void removeRequiredSkill(final String skill) {
         model.removeRequiredSkill(skill);
     }
 
-    /* public void setAllAtLeast50() {
-        model.setStrategy(new AllAtLeastStrategy(50, "tout >= 50%"));
-    }
-
-    public void setAllAtLeast60() {
-        model.setStrategy(new AllAtLeastStrategy(60, "tout >= 60%"));
-    }
-
-    public void setAverageAtLeast50() {
-        model.setStrategy(new AverageAtLeastStrategy(50, "moyenne >=50%"));
-    }*/
-
-    /*public void setStrategy(final SelectionStrategy strategy) {
-        model.setStrategy(strategy);
-    }*/
-
+    /**
+     * Change the current selection strategy in the model.
+     *
+     * @param choice Strategy choice selected by the user.
+     */
     public void setStrategyChoice(final StrategyChoice choice) {
         model.setStrategyChoice(choice);
     }
 
+    /**
+     * Trigger the search in the model using current strategy and skills.
+     */
     public void search() {
         model.search();
     }
