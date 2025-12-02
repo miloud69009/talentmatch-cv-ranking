@@ -15,35 +15,40 @@ import java.util.List;
  */
 public class SearchModel {
 
-    private ApplicantList applicants;
+    /** The list of all available applicants. */
+    private final ApplicantList applicants;
 
+    /** The list of skills currently required for the search. */
     private final List<String> requiredSkills = new ArrayList<>();
 
-    private SelectionStrategy strategy;
-
-    private StrategyChoice currentChoice;
-
+    /** The list of search results (applicant + score). */
     private final List<ApplicantScore> results = new ArrayList<>();
 
+    /** The list of listeners observing this model. */
     private final List<ModelListener> listeners = new ArrayList<>();
 
+    /** The current selection strategy. */
+    private SelectionStrategy strategy;
+
+    /** The choice representing the current strategy. */
+    private StrategyChoice currentChoice;
+
     /**
-     * Create a model by loading applicants from Yaml files
+     * Creates a model by loading applicants from YAML files
      * in the given directory, and selecting an initial strategy.
      *
-     * @param directory     directory containing the Yaml CVs
-     * @param initialChoice initial strategy choice
+     * @param directory     Directory containing the YAML CVs.
+     * @param initialChoice Initial strategy choice.
      */
     public SearchModel(final File directory, final StrategyChoice initialChoice) {
         this.applicants = new ApplicantListBuilder(directory).build();
-        // Initialise strategy + currentChoice
         setStrategyChoice(initialChoice);
     }
 
     /**
-     * Add a required skill to the search.
+     * Adds a required skill to the search.
      *
-     * @param skill skill to add (ignored if null, empty or already present)
+     * @param skill Skill to add (ignored if null, empty or already present).
      */
     public void addRequiredSkill(final String skill) {
         if (skill == null) {
@@ -60,9 +65,9 @@ public class SearchModel {
     }
 
     /**
-     * Remove a required skill from the search.
+     * Removes a required skill from the search.
      *
-     * @param skill the skill to remove
+     * @param skill The skill to remove.
      */
     public void removeRequiredSkill(final String skill) {
         if (requiredSkills.remove(skill)) {
@@ -71,9 +76,9 @@ public class SearchModel {
     }
 
     /**
-     * Set the current strategy choice and update the concrete strategy.
+     * Sets the current strategy choice and updates the concrete strategy.
      *
-     * @param choice the selected strategy choice
+     * @param choice The selected strategy choice.
      */
     public void setStrategyChoice(final StrategyChoice choice) {
         if (choice == null) {
@@ -85,17 +90,17 @@ public class SearchModel {
     }
 
     /**
-     * Get the current strategy choice.
+     * Gets the current strategy choice.
      *
-     * @return currently selected strategy choice
+     * @return The currently selected strategy choice.
      */
     public StrategyChoice getStrategyChoice() {
         return currentChoice;
     }
 
     /**
-     * Run the search according to the current required skills
-     * and strategy, and update the results list.
+     * Runs the search according to the current required skills
+     * and strategy, updates the results list, and sorts them.
      */
     public void search() {
         results.clear();
@@ -117,7 +122,7 @@ public class SearchModel {
     }
 
     /**
-     * Clear all required skills from the search.
+     * Clears all required skills from the search.
      */
     public void clearRequiredSkills() {
         requiredSkills.clear();
@@ -125,27 +130,27 @@ public class SearchModel {
     }
 
     /**
-     * Get the list of results as an unmodifiable list.
+     * Gets the list of results as an unmodifiable list.
      *
-     * @return the list of applicant scores
+     * @return The list of applicant scores.
      */
     public List<ApplicantScore> getResults() {
         return Collections.unmodifiableList(results);
     }
 
     /**
-     * Get the list of required skills as an unmodifiable list.
+     * Gets the list of required skills as an unmodifiable list.
      *
-     * @return the list of required skills
+     * @return The list of required skills.
      */
     public List<String> getRequiredSkills() {
         return Collections.unmodifiableList(requiredSkills);
     }
 
     /**
-     * Add a listener that will be notified when the model changes.
+     * Adds a listener that will be notified when the model changes.
      *
-     * @param listener the listener to add
+     * @param listener The listener to add.
      */
     public void addListener(final ModelListener listener) {
         if (listener != null && !listeners.contains(listener)) {
@@ -154,7 +159,7 @@ public class SearchModel {
     }
 
     /**
-     * Notify all registered listeners that the model has changed.
+     * Notifies all registered listeners that the model has changed.
      */
     private void notifyListeners() {
         for (ModelListener l : listeners) {

@@ -5,7 +5,8 @@ import fr.univ_lyon1.info.m1.cv_search.model.ApplicantScore;
 import fr.univ_lyon1.info.m1.cv_search.model.ModelListener;
 import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
-
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -19,26 +20,37 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 /**
  * Main view of the application, implemented using JavaFX.
+ * It observes the {@link SearchModel} to update the display automatically.
  */
 public class JfxView implements ModelListener {
+
+    /** The search model to observe. */
     private final SearchModel model;
+
+    /** The controller used to propagate user actions. */
     private CvController controller;
+
+    /** Container for the list of skills currently being searched. */
     private HBox searchSkillsBox;
+
+    /** Container for the search results. */
     private VBox resultBox;
+
+    /** Dropdown menu to select the search strategy. */
     private ComboBox<StrategyChoice> strategyBox;
+
+    /** Input field for adding new skills. */
     private TextField skillTextField;
 
     /**
-     * Create the main view of the application.
+     * Creates the main view of the application.
      *
-     * @param stage  primary stage
-     * @param width  window width
-     * @param height window height
-     * @param model  search model
+     * @param stage  The primary stage of the JavaFX application.
+     * @param width  The window width.
+     * @param height The window height.
+     * @param model  The search model to observe.
      */
     public JfxView(final Stage stage,
                    final int width,
@@ -74,16 +86,18 @@ public class JfxView implements ModelListener {
     }
 
     /**
-     * Set controller for this view.
+     * Sets the controller for this view.
      *
-     * @param controller controller to use
+     * @param controller The controller to use.
      */
     public void setController(final CvController controller) {
         this.controller = controller;
     }
 
     /**
-     * Create the text field to enter a new skill.
+     * Creates the widget (text field + buttons) to enter a new skill.
+     *
+     * @return The Node containing the skill creation widgets.
      */
     private Node createNewSkillWidget() {
         HBox newSkillBox = new HBox();
@@ -122,7 +136,9 @@ public class JfxView implements ModelListener {
     }
 
     /**
-     * Create the widget showing the list of applicants.
+     * Creates the widget showing the list of applicants.
+     *
+     * @return The Node containing the results.
      */
     private Node createResultsWidget() {
         resultBox = new VBox();
@@ -130,7 +146,9 @@ public class JfxView implements ModelListener {
     }
 
     /**
-     * Create the widget used to trigger the search.
+     * Creates the widget used to trigger the search.
+     *
+     * @return The Node containing the search button.
      */
     private Node createSearchWidget() {
         Button search = new Button("Search");
@@ -138,13 +156,14 @@ public class JfxView implements ModelListener {
             if (controller != null) {
                 controller.search();
             }
-            // Results will be displayed in modelUpdate()
         });
         return search;
     }
 
     /**
-     * Create the widget used to select the strategy.
+     * Creates the widget used to select the strategy.
+     *
+     * @return The Node containing the strategy selector.
      */
     private Node createStrategyWidget() {
         HBox box = new HBox();
@@ -167,13 +186,19 @@ public class JfxView implements ModelListener {
     }
 
     /**
-     * Create the widget showing the list of skills currently searched for.
+     * Creates the widget showing the list of skills currently searched for.
+     *
+     * @return The Node containing the list of active skills.
      */
     private Node createCurrentSearchSkillsWidget() {
         searchSkillsBox = new HBox();
         return searchSkillsBox;
     }
 
+    /**
+     * Called when the model notifies the view of a change.
+     * Updates the skill list, the strategy selection, and the search results.
+     */
     @Override
     public void modelUpdate() {
         // 0) Synchronize strategy ComboBox
@@ -182,7 +207,6 @@ public class JfxView implements ModelListener {
             strategyBox.getSelectionModel().select(choice);
         }
 
-        // 1) Update displayed skills
         searchSkillsBox.getChildren().clear();
         List<String> skills = model.getRequiredSkills();
         for (String skill : skills) {
@@ -205,18 +229,14 @@ public class JfxView implements ModelListener {
             searchSkillsBox.getChildren().add(box);
         }
 
-        // 2) Update results
         resultBox.getChildren().clear();
 
-        // Current required skills
         List<String> required = model.getRequiredSkills();
 
         for (ApplicantScore as : model.getResults()) {
             var applicant = as.getApplicant();
 
-            // Build a small skill summary
-            java.util.List<String> skillSummaries =
-                    new java.util.ArrayList<>();
+            List<String> skillSummaries = new ArrayList<>();
             for (String skill : required) {
                 int value = applicant.getSkill(skill);
                 if (value > 0) {
@@ -226,11 +246,9 @@ public class JfxView implements ModelListener {
 
             String skillsText;
             if (skillSummaries.isEmpty()) {
-                skillsText = " | Compétences : (aucune trouvée)";
+                skillsText = " | Skills: (none found)";
             } else {
-                skillsText =
-                        " | Compétences : "
-                                + String.join(", ", skillSummaries);
+                skillsText = " | Skills: " + String.join(", ", skillSummaries);
             }
 
             String text = applicant.getName()

@@ -1,21 +1,42 @@
 package fr.univ_lyon1.info.m1.cv_search.model;
 
 /**
- * Liste des stratégies disponibles pour la sélection des CV.
+ * List of available strategies for resume selection.
  */
 public enum StrategyChoice {
-    ALL_50("tout ≥ 50%"),
-    ALL_60("tout ≥ 60%"),
-    AVG_50("moyenne ≥ 50%"),
-    ALL_80("tout >= 80%"),
-    AVG_50_EXP("moyenne ≥ 50% + exp");
 
+    /** Strategy requiring all skills to be at least 50%. */
+    ALL_50("All >= 50%"),
+
+    /** Strategy requiring all skills to be at least 60%. */
+    ALL_60("All >= 60%"),
+
+    /** Strategy requiring the average score to be at least 50%. */
+    AVG_50("Average >= 50%"),
+
+    /** Strategy requiring all skills to be at least 80%. */
+    ALL_80("All >= 80%"),
+
+    /** Strategy requiring average >= 50% plus an experience bonus. */
+    AVG_50_EXP("Average >= 50% + exp");
+
+    /** The human-readable label for the strategy. */
     private final String label;
 
+    /**
+     * Constructor.
+     *
+     * @param label The label to display for this strategy.
+     */
     StrategyChoice(final String label) {
         this.label = label;
     }
 
+    /**
+     * Returns the string representation of the strategy choice.
+     *
+     * @return The label of the strategy.
+     */
     @Override
     public String toString() {
         return label;

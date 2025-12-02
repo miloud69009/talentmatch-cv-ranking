@@ -9,14 +9,17 @@ import java.util.List;
  */
 public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
 
+    /** The underlying strategy being decorated. */
     private final SelectionStrategy delegate;
+
+    /** The multiplier applied per year of relevant experience. */
     private final double yearsWeight;
 
     /**
-     * Create an experience bonus decorator.
+     * Creates an experience bonus decorator.
      *
-     * @param delegate    the base strategy to decorate
-     * @param yearsWeight multiplier applied per year of relevant experience
+     * @param delegate    The base strategy to decorate.
+     * @param yearsWeight The multiplier applied per year of relevant experience.
      */
     public ExperienceBonusStrategyDecorator(final SelectionStrategy delegate,
                                             final double yearsWeight) {
@@ -27,9 +30,9 @@ public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
     /**
      * Uses the wrapped strategy to determine if the applicant is selected.
      *
-     * @param applicant       the applicant to evaluate
-     * @param requiredSkills  skills required by the search
-     * @return true if selected by the underlying strategy
+     * @param applicant       The applicant to evaluate.
+     * @param requiredSkills  The skills required by the search.
+     * @return {@code true} if selected by the underlying strategy, {@code false} otherwise.
      */
     @Override
     public boolean isSelected(final Applicant applicant,
@@ -40,9 +43,9 @@ public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
     /**
      * Computes the score using the wrapped strategy plus experience bonus.
      *
-     * @param applicant       the applicant to evaluate
-     * @param requiredSkills  skills required by the search
-     * @return computed score with experience bonus
+     * @param applicant       The applicant to evaluate.
+     * @param requiredSkills  The skills required by the search.
+     * @return The computed score combining the base strategy score and the experience bonus.
      */
     @Override
     public double computeScore(final Applicant applicant,
@@ -53,11 +56,11 @@ public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
     }
 
     /**
-     * Compute additional score based on relevant years of experience.
+     * Computes additional score based on relevant years of experience.
      *
-     * @param applicant       applicant whose experience is evaluated
-     * @param requiredSkills  search skills used for matching
-     * @return total experience bonus
+     * @param applicant       The applicant whose experience is evaluated.
+     * @param requiredSkills  The search skills used for matching.
+     * @return The total experience bonus.
      */
     private double computeExperienceBonus(final Applicant applicant,
                                           final List<String> requiredSkills) {
@@ -77,7 +80,9 @@ public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
     }
 
     /**
-     * @return label of the decorated strategy including bonus indicator
+     * Gets the label of the decorated strategy including the bonus indicator.
+     *
+     * @return The label of the decorated strategy.
      */
     @Override
     public String getLabel() {

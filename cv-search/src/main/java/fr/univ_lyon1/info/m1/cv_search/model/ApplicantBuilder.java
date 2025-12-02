@@ -3,35 +3,41 @@ package fr.univ_lyon1.info.m1.cv_search.model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Map;
 import java.util.List;
-
-
+import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * Builder reading a Yaml file to build an Applicant object.
+ * Builder class responsible for reading a YAML file and creating an {@link Applicant} object.
  */
 public class ApplicantBuilder {
 
-    private File file;
+    /** The YAML file containing the applicant's data. */
+    private final File file;
 
     /**
-     * @param f Yaml file describing the applicant.
+     * Creates a builder for the specified YAML file.
+     *
+     * @param f The YAML file describing the applicant.
      */
     public ApplicantBuilder(final File f) {
         this.file = f;
     }
 
     /**
-     * @param filename Name of the Yaml file describing the applicant.
+     * Creates a builder for the specified YAML filename.
+     *
+     * @param filename The name of the YAML file describing the applicant.
      */
     public ApplicantBuilder(final String filename) {
         this.file = new File(filename);
     }
 
     /**
-     * Build the applicant from the Yaml file provided to the constructor.
+     * Builds the applicant instance from the YAML file provided at construction.
+     *
+     * @return The constructed {@link Applicant} object.
+     * @throws Error If the file cannot be found.
      */
     public Applicant build() {
         Applicant a = new Applicant();
@@ -46,8 +52,7 @@ public class ApplicantBuilder {
 
         a.setName((String) map.get("name"));
 
-        // Cast may fail if the Yaml is incorrect. Ideally we should provide
-        // clean error messages.
+
         @SuppressWarnings("unchecked")
         Map<String, Object> skillsMap = (Map<String, Object>) map.get("skills");
         if (skillsMap != null) {
@@ -84,10 +89,7 @@ public class ApplicantBuilder {
                 @SuppressWarnings("unchecked")
                 List<String> keywords = (List<String>) expData.get("keywords");
 
-                ExperienceEntry exp =
-                        new ExperienceEntry(company, start, end, keywords);
-
-                // ✔️ addExperience(company, exp)
+                ExperienceEntry exp = new ExperienceEntry(company, start, end, keywords);
                 a.addExperience(company, exp);
             }
         }

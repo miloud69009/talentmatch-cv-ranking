@@ -3,34 +3,34 @@ package fr.univ_lyon1.info.m1.cv_search.model;
 import java.util.List;
 
 /**
- * Représente une stratégie de sélection de candidats.
- *
- * Une stratégie évalue un candidat en fonction des compétences
- * requises, calcule un score de pertinence et indique si le
- * candidat doit être retenu ou non.
+ * Represents a candidate selection strategy.
+ * A strategy evaluates an applicant based on required skills, computes a
+ * relevance score, and indicates whether the applicant should be selected or not.
  */
 public interface SelectionStrategy {
 
     /**
-     * Indique si un candidat est sélectionné selon la stratégie.
+     * Indicates if an applicant is selected according to the strategy.
      *
-     * @param applicant       le candidat évalué
-     * @param requiredSkills  la liste des compétences recherchées
-     * @return true si le candidat correspond aux critères, false sinon
+     * @param applicant      The applicant to evaluate.
+     * @param requiredSkills The list of required skills.
+     * @return {@code true} if the applicant matches the criteria, {@code false} otherwise.
      */
     boolean isSelected(Applicant applicant, List<String> requiredSkills);
 
     /**
-     * Calcule un score de pertinence pour un candidat donné.
+     * Computes a relevance score for a given applicant.
      *
-     * @param applicant       le candidat évalué
-     * @param requiredSkills  la liste des compétences recherchées
-     * @return un score entre 0 et 100
+     * @param applicant      The applicant to evaluate.
+     * @param requiredSkills The list of required skills.
+     * @return A score representing the relevance of the applicant.
      */
     double computeScore(Applicant applicant, List<String> requiredSkills);
 
     /**
-     * @return le nom lisible de la stratégie (affiché dans l'interface)
+     * Gets the human-readable label of the strategy.
+     *
+     * @return The label of the strategy (displayed in the user interface).
      */
     String getLabel();
 }

@@ -4,23 +4,25 @@ import fr.univ_lyon1.info.m1.cv_search.model.SearchModel;
 import fr.univ_lyon1.info.m1.cv_search.model.StrategyChoice;
 
 /**
- * Controller between the view and the {@link SearchModel}.
- * Receives user actions from the view and updates the model.
+ * Controller acting as a bridge between the view and the {@link SearchModel} model.
+ * Receives user actions from the view and updates the model accordingly.
  */
 public final class CvController {
+
+    /** The search model managed by this controller. */
     private final SearchModel model;
 
     /**
-     * Create a controller bound to the given model.
+     * Creates a controller linked to the given model.
      *
-     * @param model The search model to control.
+     * @param searchModel The search model to control.
      */
-    public CvController(final SearchModel model) {
-        this.model = model;
+    public CvController(final SearchModel searchModel) {
+        this.model = searchModel;
     }
 
     /**
-     * Add a required skill to the model.
+     * Adds a required skill to the model.
      *
      * @param skill Name of the skill to add.
      */
@@ -29,7 +31,7 @@ public final class CvController {
     }
 
     /**
-     * Clear all required skills and refresh the search results.
+     * Clears all required skills and refreshes the search results.
      */
     public void clearSkills() {
         model.clearRequiredSkills();
@@ -37,7 +39,7 @@ public final class CvController {
     }
 
     /**
-     * Remove a required skill from the model.
+     * Removes a required skill from the model.
      *
      * @param skill Name of the skill to remove.
      */
@@ -46,16 +48,16 @@ public final class CvController {
     }
 
     /**
-     * Change the current selection strategy in the model.
+     * Changes the current selection strategy in the model.
      *
-     * @param choice Strategy choice selected by the user.
+     * @param choice The strategy choice selected by the user.
      */
     public void setStrategyChoice(final StrategyChoice choice) {
         model.setStrategyChoice(choice);
     }
 
     /**
-     * Trigger the search in the model using current strategy and skills.
+     * Triggers the search in the model using the current strategy and skills.
      */
     public void search() {
         model.search();

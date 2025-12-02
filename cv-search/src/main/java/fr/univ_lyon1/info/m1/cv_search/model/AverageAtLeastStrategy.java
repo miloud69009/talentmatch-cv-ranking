@@ -8,14 +8,17 @@ import java.util.List;
  */
 public class AverageAtLeastStrategy implements SelectionStrategy {
 
+    /** The minimum average score required. */
     private final int threshold;
+
+    /** The label describing the strategy. */
     private final String label;
 
     /**
      * Constructor.
      *
-     * @param threshold minimum average required
-     * @param label     label describing the strategy
+     * @param threshold The minimum average required.
+     * @param label     The label describing the strategy.
      */
     public AverageAtLeastStrategy(final int threshold, final String label) {
         this.threshold = threshold;
@@ -25,9 +28,10 @@ public class AverageAtLeastStrategy implements SelectionStrategy {
     /**
      * Determines if the applicant passes the selection based on the average.
      *
-     * @param applicant      applicant to evaluate
-     * @param requiredSkills skills required for the search
-     * @return true if the computed average is above threshold
+     * @param applicant      The applicant to evaluate.
+     * @param requiredSkills The skills required for the search.
+     * @return {@code true} if the computed average is greater than or equal to the threshold,
+     * or {@code true} if no skills are required.
      */
     @Override
     public boolean isSelected(final Applicant applicant,
@@ -44,9 +48,9 @@ public class AverageAtLeastStrategy implements SelectionStrategy {
     /**
      * Computes the average score of the applicant over required skills.
      *
-     * @param applicant      applicant to evaluate
-     * @param requiredSkills list of required skills
-     * @return average score
+     * @param applicant      The applicant to evaluate.
+     * @param requiredSkills The list of required skills.
+     * @return The average score, or 0.0 if no skills are required.
      */
     @Override
     public double computeScore(final Applicant applicant,
@@ -65,7 +69,9 @@ public class AverageAtLeastStrategy implements SelectionStrategy {
     }
 
     /**
-     * @return label describing this strategy.
+     * Gets the label describing this strategy.
+     *
+     * @return The label describing this strategy.
      */
     @Override
     public String getLabel() {

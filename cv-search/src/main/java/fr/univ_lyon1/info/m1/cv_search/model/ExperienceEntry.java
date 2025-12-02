@@ -8,18 +8,25 @@ import java.util.List;
  */
 public class ExperienceEntry {
 
+    /** The name of the company. */
     private final String company;
+
+    /** The start year of the experience. */
     private final int start;
+
+    /** The end year of the experience. */
     private final int end;
+
+    /** The list of keywords associated with this experience. */
     private final List<String> keywords;
 
     /**
-     * Create an experience entry.
+     * Creates an experience entry.
      *
-     * @param company  name of the company
-     * @param start    starting year of the job
-     * @param end      ending year of the job
-     * @param keywords list of keywords related to the job
+     * @param company  The name of the company.
+     * @param start    The starting year of the job.
+     * @param end      The ending year of the job.
+     * @param keywords The list of keywords related to the job.
      */
     public ExperienceEntry(final String company,
                            final int start,
@@ -32,37 +39,45 @@ public class ExperienceEntry {
     }
 
     /**
-     * @return the company name
+     * Gets the company name.
+     *
+     * @return The company name.
      */
     public String getCompany() {
         return company;
     }
 
     /**
-     * @return the start year
+     * Gets the start year.
+     *
+     * @return The start year.
      */
     public int getStart() {
         return start;
     }
 
     /**
-     * @return the end year
+     * Gets the end year.
+     *
+     * @return The end year.
      */
     public int getEnd() {
         return end;
     }
 
     /**
-     * @return list of experience keywords
+     * Gets the list of experience keywords.
+     *
+     * @return The list of keywords.
      */
     public List<String> getKeywords() {
         return keywords;
     }
 
     /**
-     * Compute the duration of the experience in years.
+     * Computes the duration of the experience in years.
      *
-     * @return duration in years (end - start)
+     * @return The duration in years (calculated as end - start).
      */
     public int getDurationYears() {
         return end - start;

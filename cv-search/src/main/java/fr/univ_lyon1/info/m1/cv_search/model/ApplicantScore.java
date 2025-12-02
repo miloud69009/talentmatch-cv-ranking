@@ -44,6 +44,11 @@ public class ApplicantScore implements Comparable<ApplicantScore> {
         return Double.compare(other.score, this.score);
     }
 
+    /**
+     * Returns a string representation of the applicant score.
+     *
+     * @return A string in the format "Name : Score".
+     */
     @Override
     public String toString() {
         return applicant.getName() + " : " + score;
