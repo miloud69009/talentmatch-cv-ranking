@@ -34,14 +34,11 @@ public class StrategyTest {
      */
     @Test
     public void testAllAtLeastStrategySuccess() {
-        // Given
         SelectionStrategy strategy = new AllAtLeastStrategy(50, "Tout >= 50");
         List<String> skills = Arrays.asList("Java", "Python");
 
-        // When
         boolean selected = strategy.isSelected(applicant, skills);
 
-        // Then
         assertThat(selected, is(true));
     }
 
@@ -50,14 +47,11 @@ public class StrategyTest {
      */
     @Test
     public void testAllAtLeastStrategyFailure() {
-        // Given
         SelectionStrategy strategy = new AllAtLeastStrategy(50, "Tout >= 50");
         List<String> skills = Arrays.asList("Java", "C++"); // C++ is 40
 
-        // When
         boolean selected = strategy.isSelected(applicant, skills);
 
-        // Then
         assertThat(selected, is(false));
     }
 
@@ -66,15 +60,12 @@ public class StrategyTest {
      */
     @Test
     public void testAverageStrategy() {
-        // Given
         SelectionStrategy strategy = new AverageAtLeastStrategy(50, "Moyenne >= 50");
         List<String> skills = Arrays.asList("Java", "C++"); // (80+40)/2 = 60
 
-        // When
         boolean selected = strategy.isSelected(applicant, skills);
         double score = strategy.computeScore(applicant, skills);
 
-        // Then
         assertThat(selected, is(true));
         assertThat(score, is(60.0));
     }
@@ -84,7 +75,6 @@ public class StrategyTest {
      */
     @Test
     public void testExperienceDecorator() {
-        // Given
         ExperienceEntry exp = new ExperienceEntry("TechCorp", 2010, 2015,
                 Collections.singletonList("Java"));
         applicant.addExperience("TechCorp", exp);
@@ -94,14 +84,36 @@ public class StrategyTest {
         SelectionStrategy decorated = new ExperienceBonusStrategyDecorator(base, 0.2);
         List<String> skills = Collections.singletonList("Java");
 
-        // When
         double baseScore = base.computeScore(applicant, skills);
         double finalScore = decorated.computeScore(applicant, skills);
 
-        // Then
         // Base score for Java is 80.
         // Bonus: 5 years * 0.2 = 1.0. Total should be 81.0
         assertThat(baseScore, is(80.0));
         assertThat(finalScore, is(81.0));
+    }
+
+    /**
+     * Verify that TolerantStrategy accepts an applicant with one weakness.
+     */
+    @Test
+    public void testTolerantStrategy() {
+        // Given: A candidate strong in Java/Python (80) but weak in C++ (10)
+        applicant.setSkill("Java", 80);
+        applicant.setSkill("Python", 80);
+        applicant.setSkill("C++", 10);
+
+        // Strategies
+        SelectionStrategy strict = new AllAtLeastStrategy(50, "Strict");
+        SelectionStrategy tolerant = new TolerantStrategy(50, "Tolerant");
+
+        List<String> skills = Arrays.asList("Java", "Python", "C++");
+
+        // Then
+        // Strict strategy rejects (because of C++)
+        assertThat(strict.isSelected(applicant, skills), is(false));
+
+        // Tolerant strategy accepts (only 1 failure allowed)
+        assertThat(tolerant.isSelected(applicant, skills), is(true));
     }
 }

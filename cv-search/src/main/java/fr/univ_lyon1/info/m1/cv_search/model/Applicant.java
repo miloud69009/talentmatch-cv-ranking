@@ -19,15 +19,26 @@ public class Applicant {
     private String name;
 
     /**
-     * Gets the score for a given skill.
+     * Gets the score for a given skill (case-insensitive).
      *
      * @param skillName The name of the skill to query.
      * @return The score of the skill, or 0 if the skill is not found.
      */
     public int getSkill(final String skillName) {
-        return skills.getOrDefault(skillName, 0);
-    }
+        // 1. Essai exact (plus rapide)
+        if (skills.containsKey(skillName)) {
+            return skills.get(skillName);
+        }
 
+        // 2. Recherche insensible à la casse (pour trouver "java" avec "Java")
+        for (String key : skills.keySet()) {
+            if (key.equalsIgnoreCase(skillName)) {
+                return skills.get(key);
+            }
+        }
+
+        return 0;
+    }
     /**
      * Assigns a score to a skill for the current applicant.
      *

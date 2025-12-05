@@ -52,4 +52,23 @@ public class ApplicantTest {
         }
         assertThat(johnFound, is(true));
     }
+
+    /**
+     * Verify that getSkill is case-insensitive.
+     */
+    @Test
+    public void testCaseInsensitiveSkillSearch() {
+        // Given
+        Applicant a = new Applicant();
+        a.setSkill("java", 90); // Stored in lowercase
+
+        // When/Then
+        // Should find it even if we search with uppercase
+        assertThat(a.getSkill("Java"), is(90));
+        assertThat(a.getSkill("JAVA"), is(90));
+        assertThat(a.getSkill("JaVa"), is(90));
+
+        // Should return 0 if really not present
+        assertThat(a.getSkill("Python"), is(0));
+    }
 }

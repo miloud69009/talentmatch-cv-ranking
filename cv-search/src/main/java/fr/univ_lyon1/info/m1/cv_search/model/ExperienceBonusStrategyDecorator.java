@@ -65,17 +65,14 @@ public class ExperienceBonusStrategyDecorator implements SelectionStrategy {
     private double computeExperienceBonus(final Applicant applicant,
                                           final List<String> requiredSkills) {
         double bonus = 0.0;
-
         for (ExperienceEntry exp : applicant.getExperiences().values()) {
             int years = exp.getDurationYears();
-
             for (String kw : exp.getKeywords()) {
                 if (requiredSkills.contains(kw)) {
                     bonus += years * yearsWeight;
                 }
             }
         }
-
         return bonus;
     }
 

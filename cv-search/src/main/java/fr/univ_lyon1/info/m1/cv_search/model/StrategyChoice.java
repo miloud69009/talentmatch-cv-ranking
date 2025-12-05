@@ -18,7 +18,10 @@ public enum StrategyChoice {
     ALL_80("All >= 80%"),
 
     /** Strategy requiring average >= 50% plus an experience bonus. */
-    AVG_50_EXP("Average >= 50% + exp");
+    AVG_50_EXP("Average >= 50% + exp"),
+
+    /** Strategy tolerating one weakness (Ethical choice). */
+    TOLERANT_50("Tolerant >= 50% (1 fail allowed)");
 
     /** The human-readable label for the strategy. */
     private final String label;

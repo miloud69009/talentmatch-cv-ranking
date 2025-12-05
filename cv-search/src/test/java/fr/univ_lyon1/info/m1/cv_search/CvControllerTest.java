@@ -36,4 +36,22 @@ public class CvControllerTest {
         // Then
         assertThat(model.getRequiredSkills(), is(empty()));
     }
+
+    /**
+     * Verifies that removing a skill via the controller updates the model.
+     */
+    @Test
+    public void testControllerRemovesSkill() {
+        // Given
+        SearchModel model = new SearchModel(new File("."), StrategyChoice.ALL_50);
+        CvController controller = new CvController(model);
+
+        controller.addRequiredSkill("Java");
+
+        // When
+        controller.removeRequiredSkill("Java");
+
+        // Then
+        assertThat(model.getRequiredSkills(), is(empty()));
+    }
 }

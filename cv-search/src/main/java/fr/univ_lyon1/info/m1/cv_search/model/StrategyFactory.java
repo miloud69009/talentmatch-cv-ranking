@@ -37,6 +37,8 @@ public final class StrategyFactory {
                         new AverageAtLeastStrategy(50, "Average >= 50%"),
                         YEARS_WEIGHT
                 );
+            case TOLERANT_50:
+                return new TolerantStrategy(50, "Tolerant >= 50% (1 fail allowed)");
             default:
                 throw new IllegalArgumentException("Unknown strategy choice: " + choice);
         }
