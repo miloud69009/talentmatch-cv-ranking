@@ -60,15 +60,13 @@ public class ApplicantTest {
     public void testCaseInsensitiveSkillSearch() {
         // Given
         Applicant a = new Applicant();
-        a.setSkill("java", 90); // Stored in lowercase
+        a.setSkill("java", 90);
 
-        // When/Then
-        // Should find it even if we search with uppercase
+        // When
         assertThat(a.getSkill("Java"), is(90));
         assertThat(a.getSkill("JAVA"), is(90));
         assertThat(a.getSkill("JaVa"), is(90));
 
-        // Should return 0 if really not present
         assertThat(a.getSkill("Python"), is(0));
     }
 }

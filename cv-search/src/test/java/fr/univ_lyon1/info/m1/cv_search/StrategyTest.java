@@ -75,9 +75,9 @@ public class StrategyTest {
      */
     @Test
     public void testExperienceDecorator() {
-        ExperienceEntry exp = new ExperienceEntry("TechCorp", 2010, 2015,
+        ExperienceEntry exp = new ExperienceEntry("Google", 2010, 2015,
                 Collections.singletonList("Java"));
-        applicant.addExperience("TechCorp", exp);
+        applicant.addExperience("Google", exp);
 
         SelectionStrategy base = new AverageAtLeastStrategy(50, "Base");
         // +0.2 per year

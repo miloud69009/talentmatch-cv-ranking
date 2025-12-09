@@ -12,7 +12,6 @@ public final class StrategyFactory {
      * Private constructor to prevent instantiation of this utility class.
      */
     private StrategyFactory() {
-        // prevents instantiation
     }
 
     /**

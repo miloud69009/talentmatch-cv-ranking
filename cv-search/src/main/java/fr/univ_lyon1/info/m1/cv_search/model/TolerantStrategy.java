@@ -46,7 +46,7 @@ public class TolerantStrategy implements SelectionStrategy {
             }
         }
 
-        // Ethical rule: We tolerate exactly one failure (weakness)
+        // We tolerate exactly one weakness
         return failures <= 1;
     }
 

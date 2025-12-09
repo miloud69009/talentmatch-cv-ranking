@@ -42,25 +42,17 @@ public class SearchModelTest {
      */
     @Test
     public void testSearchUpdatesResults() {
-        // Given : Un modèle avec des fichiers réels (ou un dossier mocké)
+        // Given
         SearchModel model = new SearchModel(new File("."), StrategyChoice.ALL_50);
 
-        // On s'assure qu'on a des données (le dossier courant contient applicant1.yaml)
-        // Note: Si le test échoue sur la CI à cause du dossier,
-        // il faudra mocker ApplicantListBuilder.
-        // Mais pour un TP, tester avec les fichiers fournis est souvent accepté.
 
-        model.addRequiredSkill("c"); // John Smith a 90 en C
-
+        model.addRequiredSkill("c");
         // When
         model.search();
 
         // Then
-        // On vérifie que la liste des résultats n'est pas vide
-        // (John Smith devrait être sélectionné car 90 >= 50)
         assertThat(model.getResults().isEmpty(), is(false));
 
-        // On vérifie qu'on a bien des ApplicantScore dedans
         assertThat(model.getResults().get(0).getScore() >= 50, is(true));
     }
 
@@ -79,12 +71,9 @@ public class SearchModelTest {
         ApplicantScore scoreLow = new ApplicantScore(a2, 10.0);
 
         // When
-        // compareTo should return negative if 'this' (High) is greater than 'other' (Low)
-        // for descending sort order.
         int comparison = scoreHigh.compareTo(scoreLow);
 
         // Then
-        // High score should come BEFORE Low score, so comparison < 0
         boolean isSortedCorrectly = comparison < 0;
         assertThat(isSortedCorrectly, is(true));
     }
