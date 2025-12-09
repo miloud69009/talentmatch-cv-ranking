@@ -1,7 +1,19 @@
-# IntelliJ
+# IntelliJ IDEA
 .idea/
 *.iml
+*.iws
 
-# Maven
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
 target/
+
 **/target/
+
+log/
+*.log
