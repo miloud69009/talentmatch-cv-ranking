@@ -201,7 +201,6 @@ public class JfxView implements ModelListener {
      */
     @Override
     public void modelUpdate() {
-        // 0) Synchronize strategy ComboBox
         StrategyChoice choice = model.getStrategyChoice();
         if (choice != null && strategyBox.getValue() != choice) {
             strategyBox.getSelectionModel().select(choice);
