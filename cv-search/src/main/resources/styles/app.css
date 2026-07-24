@@ -1,0 +1,377 @@
+/*
+ * TalentMatch - JavaFX stylesheet
+ * Purely visual: no business logic is changed.
+ */
+
+.app-root {
+    -fx-font-family: "Inter", "Segoe UI", "Ubuntu", sans-serif;
+    -fx-background-color: #f4f7fb;
+}
+
+/* Header */
+.app-header {
+    -fx-padding: 18 24 18 24;
+    -fx-background-color: #182235;
+    -fx-border-color: transparent transparent #26344c transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.brand-logo {
+    -fx-min-width: 46;
+    -fx-min-height: 46;
+    -fx-alignment: center;
+    -fx-background-color: #4f7cff;
+    -fx-background-radius: 13;
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+.brand-title {
+    -fx-text-fill: white;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.brand-subtitle {
+    -fx-text-fill: #aebbd0;
+    -fx-font-size: 12px;
+}
+
+/* Main layout */
+.workspace {
+    -fx-background-color: #f4f7fb;
+}
+
+.panel {
+    -fx-padding: 22;
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-color: #e2e8f2;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(25, 39, 70, 0.08), 18, 0.12, 0, 5);
+}
+
+.search-panel {
+    -fx-spacing: 14;
+}
+
+.results-panel {
+    -fx-spacing: 12;
+}
+
+.section-label {
+    -fx-text-fill: #4f7cff;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.section-title {
+    -fx-text-fill: #19243a;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.field-label {
+    -fx-text-fill: #34425a;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.muted-text {
+    -fx-text-fill: #748198;
+    -fx-font-size: 12px;
+}
+
+.separator .line {
+    -fx-border-color: #e7ecf3;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Fields */
+.text-field,
+.combo-box {
+    -fx-min-height: 40;
+    -fx-background-color: #f8faff;
+    -fx-background-radius: 9;
+    -fx-border-color: #dbe3ef;
+    -fx-border-radius: 9;
+    -fx-border-width: 1;
+    -fx-text-fill: #1d293d;
+    -fx-prompt-text-fill: #9aa7ba;
+}
+
+.text-field {
+    -fx-padding: 0 12 0 12;
+}
+
+.text-field:focused,
+.combo-box:focused {
+    -fx-background-color: white;
+    -fx-border-color: #4f7cff;
+    -fx-effect: dropshadow(gaussian, rgba(79, 124, 255, 0.16), 8, 0.1, 0, 1);
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1d293d;
+    -fx-padding: 7 10 7 10;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #dbe3ef;
+}
+
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #edf2ff;
+    -fx-text-fill: #294fbd;
+}
+
+/* Buttons */
+.button {
+    -fx-min-height: 40;
+    -fx-padding: 0 16 0 16;
+    -fx-background-radius: 9;
+    -fx-border-radius: 9;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.primary-button {
+    -fx-background-color: #4f7cff;
+    -fx-text-fill: white;
+}
+
+.primary-button:hover {
+    -fx-background-color: #3e6de8;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #315dcc;
+}
+
+.secondary-button {
+    -fx-background-color: #edf2ff;
+    -fx-text-fill: #365fc7;
+    -fx-border-color: #d5e0ff;
+    -fx-border-width: 1;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #dfe8ff;
+}
+
+.ghost-button {
+    -fx-background-color: white;
+    -fx-text-fill: #536078;
+    -fx-border-color: #dbe3ef;
+    -fx-border-width: 1;
+}
+
+.ghost-button:hover {
+    -fx-background-color: #f4f7fb;
+    -fx-text-fill: #26354e;
+}
+
+/* Selected skills */
+.skills-pane {
+    -fx-min-height: 62;
+    -fx-padding: 11;
+    -fx-background-color: #f8faff;
+    -fx-background-radius: 10;
+    -fx-border-color: #e1e7f0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.skill-chip {
+    -fx-padding: 5 7 5 10;
+    -fx-background-color: #eaf0ff;
+    -fx-background-radius: 999;
+    -fx-border-color: #d5e0ff;
+    -fx-border-radius: 999;
+    -fx-border-width: 1;
+}
+
+.skill-chip-label {
+    -fx-text-fill: #3155ad;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.skill-chip-remove {
+    -fx-min-width: 22;
+    -fx-min-height: 22;
+    -fx-pref-width: 22;
+    -fx-pref-height: 22;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-text-fill: #7184ad;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.skill-chip-remove:hover {
+    -fx-background-color: #d4dfff;
+    -fx-text-fill: #284da7;
+}
+
+.empty-skills {
+    -fx-text-fill: #8b97aa;
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+}
+
+/* Results */
+.result-count {
+    -fx-padding: 6 10 6 10;
+    -fx-background-color: #edf2ff;
+    -fx-background-radius: 999;
+    -fx-text-fill: #365fc7;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.results-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.results-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.results-box {
+    -fx-padding: 2 8 8 2;
+    -fx-background-color: transparent;
+}
+
+.candidate-card {
+    -fx-padding: 17;
+    -fx-background-color: #fbfcff;
+    -fx-background-radius: 13;
+    -fx-border-color: #e2e8f2;
+    -fx-border-radius: 13;
+    -fx-border-width: 1;
+}
+
+.candidate-card:hover {
+    -fx-background-color: white;
+    -fx-border-color: #cfd9e9;
+    -fx-effect: dropshadow(gaussian, rgba(25, 39, 70, 0.08), 12, 0.08, 0, 3);
+}
+
+.rank-badge {
+    -fx-min-width: 35;
+    -fx-min-height: 28;
+    -fx-alignment: center;
+    -fx-background-color: #19243a;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.candidate-name {
+    -fx-text-fill: #1d293d;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.score-badge {
+    -fx-padding: 6 10 6 10;
+    -fx-background-color: #e9f8ef;
+    -fx-background-radius: 999;
+    -fx-text-fill: #247a48;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.score-progress {
+    -fx-pref-height: 8;
+}
+
+.score-progress > .track {
+    -fx-background-color: #e8edf5;
+    -fx-background-radius: 999;
+}
+
+.score-progress > .bar {
+    -fx-background-color: #4f7cff;
+    -fx-background-radius: 999;
+    -fx-background-insets: 0;
+}
+
+.candidate-skills {
+    -fx-padding: 2 0 0 0;
+}
+
+.candidate-skill {
+    -fx-padding: 5 9 5 9;
+    -fx-background-color: #f0f3f8;
+    -fx-background-radius: 7;
+    -fx-text-fill: #526078;
+    -fx-font-size: 11px;
+}
+
+/* Empty results */
+.empty-state {
+    -fx-min-height: 360;
+    -fx-padding: 45;
+}
+
+.empty-icon {
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-alignment: center;
+    -fx-background-color: #edf2ff;
+    -fx-background-radius: 22;
+    -fx-text-fill: #4f7cff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.empty-title {
+    -fx-text-fill: #26354e;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+/* Footer */
+.app-footer {
+    -fx-padding: 11 20 11 20;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f2 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-text {
+    -fx-text-fill: #8b97aa;
+    -fx-font-size: 10px;
+}
+
+/* Scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 9;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c8d1df;
+    -fx-background-radius: 999;
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
